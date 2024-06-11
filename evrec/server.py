@@ -116,7 +116,7 @@ class EvrecServer:
     ) -> None:
         new_topic = f"{self.settings.mqtt_topic_write}/{message.topic}"
         properties = Properties(PacketTypes.PUBLISH)
-        properties.UserProperty = ("kid", key.kid)
+        properties.UserProperty = [("kid", key.kid), ("thumbprint", key.thumbprint())]
         await client.publish(
             topic=new_topic,
             payload=jws.objects["payload"],
