@@ -87,27 +87,40 @@ class EvrecServer:
         return res
 
     async def run(self):
-        async with aiomqtt.Client(self.settings.mqtt_broker) as client:
-            await client.subscribe(self.settings.mqtt_topic_read)
+        while True:
+            try:
+                async with aiomqtt.Client(self.settings.mqtt_broker) as client:
+                    logging.info("MQTT connected to %s", self.settings.mqtt_broker)
+                    await client.subscribe(self.settings.mqtt_topic_read)
 
-            async for message in client.messages:
-                try:
-                    jws = JWS()
-                    jws.deserialize(message.payload)
-                    key = verify_jws_with_keys(jws, self.clients_keys)
-                    logger.info(
-                        "Verified message from %s on %s", key.kid, message.topic
-                    )
-                    if self.settings.mqtt_topic_write:
-                        await self.handle_payload(client, message, jws, key)
-                    else:
-                        logger.debug("Not publishing verified message")
-                except JWKeyNotFound:
-                    logger.warning("Dropping unverified message on %s", message.topic)
-                except Exception as exc:
-                    logger.error(
-                        "Error parsing message on %s", message.topic, exc_info=exc
-                    )
+                    async for message in client.messages:
+                        try:
+                            jws = JWS()
+                            jws.deserialize(message.payload)
+                            key = verify_jws_with_keys(jws, self.clients_keys)
+                            logger.info(
+                                "Verified message from %s on %s", key.kid, message.topic
+                            )
+                            if self.settings.mqtt_topic_write:
+                                await self.handle_payload(client, message, jws, key)
+                            else:
+                                logger.debug("Not publishing verified message")
+                        except JWKeyNotFound:
+                            logger.warning(
+                                "Dropping unverified message on %s", message.topic
+                            )
+                        except Exception as exc:
+                            logger.error(
+                                "Error parsing message on %s",
+                                message.topic,
+                                exc_info=exc,
+                            )
+            except aiomqtt.MqttError:
+                logging.error(
+                    "MQTT connection lost; Reconnecting in %d seconds...",
+                    self.settings.mqtt_reconnect_interval,
+                )
+                await asyncio.sleep(self.settings.mqtt_reconnect_interval)
 
     async def handle_payload(
         self,

@@ -2,12 +2,15 @@ import tomllib
 
 from pydantic_settings import BaseSettings
 
+DEFAULT_MQTT_RECONNECT_INTERVAL = 5
+
 
 class Settings(BaseSettings):
     clients_database: str
     mqtt_broker: str | None
     mqtt_topic_read: str
     mqtt_topic_write: str | None
+    mqtt_reconnect_interval: int = DEFAULT_MQTT_RECONNECT_INTERVAL
 
     @classmethod
     def from_file(cls, filename: str):
@@ -19,4 +22,7 @@ class Settings(BaseSettings):
             mqtt_broker=data.get("MQTT_BROKER"),
             mqtt_topic_read=data.get("MQTT_TOPIC_READ", "events/up/#"),
             mqtt_topic_write=data.get("MQTT_TOPIC_WRITE"),
+            mqtt_reconnect_interval=data.get(
+                "MQTT_RECONNECT_INTERVAL", DEFAULT_MQTT_RECONNECT_INTERVAL
+            ),
         )
