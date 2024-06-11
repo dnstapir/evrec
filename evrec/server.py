@@ -96,7 +96,10 @@ class EvrecServer:
                     logger.info(
                         "Verified message from %s on %s", key.kid, message.topic
                     )
-                    await self.handle_payload(client, message, jws, key)
+                    if self.settings.mqtt_topic_write:
+                        await self.handle_payload(client, message, jws, key)
+                    else:
+                        logger.debug("Not publishing verified message")
                 except JWKeyNotFound:
                     logger.warning("Dropping unverified message on %s", message.topic)
                 except Exception as exc:

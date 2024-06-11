@@ -2,4 +2,4 @@ CLIENTS_DATABASE = "clients"
 
 MQTT_BROKER = "localhost"
 MQTT_TOPIC_READ = "events/up/#"
-MQTT_TOPIC_WRITE = "verified"
+#MQTT_TOPIC_WRITE = "verified"
