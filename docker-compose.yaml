@@ -1,0 +1,15 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:latest
+    restart: unless-stopped
+    ports:
+      - 127.0.0.1:1883:1883/tcp
+    configs:
+      - source: mosquitto.conf
+        target: /mosquitto/config/mosquitto.conf
+
+configs:
+  mosquitto.conf:
+    content: |
+      listener 1883
+      allow_anonymous true

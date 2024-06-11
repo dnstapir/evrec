@@ -1,0 +1,56 @@
+[tool.poetry]
+name = "evrec"
+version = "0.0.0"
+description = "DNS TAPIR Event Receiver"
+authors = ["Jakob Schlyter <jakob@kirei.se>"]
+readme = "README.md"
+
+[tool.poetry.scripts]
+evrec_server = "evrec.server:main"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic-settings = "^2.0.3"
+aiomqtt = "^2.1.0"
+jwcrypto = "^1.5.6"
+jsonformatter = "^0.3.2"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.0"
+ruff = "^0.4.3"
+pytest-ruff = "^0.3.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
+ignore = ["E501", "I001"]
+
+[tool.ruff.lint.isort]
+force-sort-within-sections = false
+known-first-party = [
+    "evrec",
+]
+extra-standard-library = [
+    "tomllib",
+]
+combine-as-imports = true
+split-on-trailing-comma = false
