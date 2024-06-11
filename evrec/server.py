@@ -58,6 +58,8 @@ TEST_PAYLOAD = '{"payload":"eyJmbGFncyI6MzMxNTIsInFjbGFzcyI6MSwicW5hbWUiOiJpMi1v
 class EvrecServer:
     def __init__(self, settings: Settings):
         self.settings = settings
+        if self.settings.mqtt_topic_write is None:
+            logger.warning("Not publishing verified messages")
         self.clients_keys = self.get_clients_keys()
 
     @staticmethod
