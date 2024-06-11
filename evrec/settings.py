@@ -1,12 +1,11 @@
 import tomllib
-from typing import Optional
 
 from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
     clients_database: str
-    mqtt_broker: Optional[str]
+    mqtt_broker: str | None
     mqtt_topic_read: str
     mqtt_topic_write: str
 
