@@ -41,7 +41,7 @@ reformat:
 clean:
 	rm -f *.pem
 	rm -fr clients
-	rm -f $(BUILDINFO) $(OPENAPI)
+	rm -f $(BUILDINFO)
 
 realclean: clean
 	poetry env remove --all
