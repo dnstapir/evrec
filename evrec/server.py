@@ -98,6 +98,10 @@ class EvrecServer:
                     await self.handle_payload(client, message, jws, key)
                 except JWKeyNotFound:
                     logger.warning("Dropping unverified message on %s", message.topic)
+                except Exception as exc:
+                    logger.error(
+                        "Error parsing message on %s", message.topic, exc_info=exc
+                    )
 
     async def handle_payload(
         self,
