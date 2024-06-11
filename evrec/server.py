@@ -80,6 +80,7 @@ class EvrecServer:
             with open(filename, "rb") as fp:
                 key = JWK.from_pem(fp.read())
                 key.kid = filename.name.removesuffix(".pem")
+                logger.debug("Adding key kid=%s (%s)", key.kid, key.thumbprint())
                 res.add(key)
         return res
 
