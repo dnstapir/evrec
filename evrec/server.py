@@ -1,5 +1,6 @@
 import argparse
 import asyncio
+import json
 import logging
 import logging.config
 import os
@@ -144,7 +145,12 @@ class EvrecServer:
 
 def verify_jws_with_keys(jws: JWS, keys: JWKSet) -> JWK:
     """Verify JWS using keys and return key (or raise JWKeyNotFound)"""
-    for key in keys:
+    protected_header = json.loads(jws.objects["protected"])
+    if kid := protected_header.get("kid"):
+        logger.debug("Signature by kid=%s", kid)
+    else:
+        logger.debug("Signature by unknown key")
+    for key in keys.get_keys(kid) or keys:
         try:
             jws.verify(key=key)
             return key
