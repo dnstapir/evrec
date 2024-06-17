@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     mqtt_topic_read: str
     mqtt_topic_write: str | None
     mqtt_reconnect_interval: int = DEFAULT_MQTT_RECONNECT_INTERVAL
+    schema_validation: bool = False
 
     @classmethod
     def from_file(cls, filename: str):
@@ -25,4 +26,5 @@ class Settings(BaseSettings):
             mqtt_reconnect_interval=data.get(
                 "MQTT_RECONNECT_INTERVAL", DEFAULT_MQTT_RECONNECT_INTERVAL
             ),
+            schema_validation=data.get("SCHEMA_VALIDATION", False),
         )

@@ -103,9 +103,10 @@ class EvrecServer:
                             jws = JWS()
                             jws.deserialize(message.payload)
                             key = verify_jws_with_keys(jws, self.clients_keys)
-                            self.message_validator.validate_message(
-                                str(message.topic), jws.objects["payload"]
-                            )
+                            if self.settings.schema_validation:
+                                self.message_validator.validate_message(
+                                    str(message.topic), jws.objects["payload"]
+                                )
                             if self.settings.mqtt_topic_write:
                                 await self.handle_payload(client, message, jws, key)
                             else:
