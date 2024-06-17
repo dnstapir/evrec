@@ -17,7 +17,7 @@ jsonformatter = "^0.3.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.0"
-ruff = "^0.4.3"
+ruff = "^0.4.9"
 pytest-ruff = "^0.3.1"
 
 [build-system]
