@@ -26,6 +26,25 @@ files = [
 ]
 
 [[package]]
+name = "arrow"
+version = "1.3.0"
+description = "Better dates & times for Python"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "arrow-1.3.0-py3-none-any.whl", hash = "sha256:c728b120ebc00eb84e01882a6f5e7927a53960aa990ce7dd2b10f39005a67f80"},
+    {file = "arrow-1.3.0.tar.gz", hash = "sha256:d4540617648cb5f895730f1ad8c82a65f2dad0166f57b75f3ca54759c4d67a85"},
+]
+
+[package.dependencies]
+python-dateutil = ">=2.7.0"
+types-python-dateutil = ">=2.8.10"
+
+[package.extras]
+doc = ["doc8", "sphinx (>=7.0.0)", "sphinx-autobuild", "sphinx-autodoc-typehints", "sphinx_rtd_theme (>=1.3.0)"]
+test = ["dateparser (==1.*)", "pre-commit", "pytest", "pytest-cov", "pytest-mock", "pytz (==2021.1)", "simplejson (==3.*)"]
+
+[[package]]
 name = "attrs"
 version = "23.2.0"
 description = "Classes Without Boilerplate"
@@ -174,6 +193,28 @@ test = ["certifi", "pretend", "pytest (>=6.2.0)", "pytest-benchmark", "pytest-co
 test-randomorder = ["pytest-randomly"]
 
 [[package]]
+name = "fqdn"
+version = "1.5.1"
+description = "Validates fully-qualified domain names against RFC 1123, so that they are acceptable to modern bowsers"
+optional = false
+python-versions = ">=2.7, !=3.0, !=3.1, !=3.2, !=3.3, !=3.4, <4"
+files = [
+    {file = "fqdn-1.5.1-py3-none-any.whl", hash = "sha256:3a179af3761e4df6eb2e026ff9e1a3033d3587bf980a0b1b2e1e5d08d7358014"},
+    {file = "fqdn-1.5.1.tar.gz", hash = "sha256:105ed3677e767fb5ca086a0c1f4bb66ebc3c100be518f0e0d755d9eae164d89f"},
+]
+
+[[package]]
+name = "idna"
+version = "3.7"
+description = "Internationalized Domain Names in Applications (IDNA)"
+optional = false
+python-versions = ">=3.5"
+files = [
+    {file = "idna-3.7-py3-none-any.whl", hash = "sha256:82fee1fc78add43492d3a1898bfa6d8a904cc97d8427f683ed8e798d07761aa0"},
+    {file = "idna-3.7.tar.gz", hash = "sha256:028ff3aadf0609c1fd278d8ea3089299412a7a8b9bd005dd08b9f8285bcb5cfc"},
+]
+
+[[package]]
 name = "iniconfig"
 version = "2.0.0"
 description = "brain-dead simple config-ini parsing"
@@ -185,6 +226,20 @@ files = [
 ]
 
 [[package]]
+name = "isoduration"
+version = "20.11.0"
+description = "Operations with ISO 8601 durations"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "isoduration-20.11.0-py3-none-any.whl", hash = "sha256:b2904c2a4228c3d44f409c8ae8e2370eb21a26f7ac2ec5446df141dde3452042"},
+    {file = "isoduration-20.11.0.tar.gz", hash = "sha256:ac2f9015137935279eac671f94f89eb00584f940f5dc49462a0c4ee692ba1bd9"},
+]
+
+[package.dependencies]
+arrow = ">=0.15.0"
+
+[[package]]
 name = "jsonformatter"
 version = "0.3.2"
 description = "Python log in json format."
@@ -192,6 +247,17 @@ optional = false
 python-versions = ">=2.7"
 files = [
     {file = "jsonformatter-0.3.2.tar.gz", hash = "sha256:d69c4b294cd9030b6803659924908f979ae827f5bdccde6a3815c0afb062948f"},
+]
+
+[[package]]
+name = "jsonpointer"
+version = "3.0.0"
+description = "Identify specific nodes in a JSON document (RFC 6901)"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "jsonpointer-3.0.0-py2.py3-none-any.whl", hash = "sha256:13e088adc14fca8b6aa8177c044e12701e6ad4b28ff10e65f2267a90109c9942"},
+    {file = "jsonpointer-3.0.0.tar.gz", hash = "sha256:2b2d729f2091522d61c3b31f82e11870f60b68f43fbc705cb76bf4b832af59ef"},
 ]
 
 [[package]]
@@ -207,9 +273,17 @@ files = [
 
 [package.dependencies]
 attrs = ">=22.2.0"
+fqdn = {version = "*", optional = true, markers = "extra == \"format\""}
+idna = {version = "*", optional = true, markers = "extra == \"format\""}
+isoduration = {version = "*", optional = true, markers = "extra == \"format\""}
+jsonpointer = {version = ">1.13", optional = true, markers = "extra == \"format\""}
 jsonschema-specifications = ">=2023.03.6"
 referencing = ">=0.28.4"
+rfc3339-validator = {version = "*", optional = true, markers = "extra == \"format\""}
+rfc3987 = {version = "*", optional = true, markers = "extra == \"format\""}
 rpds-py = ">=0.7.1"
+uri-template = {version = "*", optional = true, markers = "extra == \"format\""}
+webcolors = {version = ">=1.11", optional = true, markers = "extra == \"format\""}
 
 [package.extras]
 format = ["fqdn", "idna", "isoduration", "jsonpointer (>1.13)", "rfc3339-validator", "rfc3987", "uri-template", "webcolors (>=1.11)"]
@@ -460,6 +534,20 @@ pytest = ">=5"
 ruff = ">=0.0.242"
 
 [[package]]
+name = "python-dateutil"
+version = "2.9.0.post0"
+description = "Extensions to the standard Python datetime module"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
+files = [
+    {file = "python-dateutil-2.9.0.post0.tar.gz", hash = "sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3"},
+    {file = "python_dateutil-2.9.0.post0-py2.py3-none-any.whl", hash = "sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427"},
+]
+
+[package.dependencies]
+six = ">=1.5"
+
+[[package]]
 name = "python-dotenv"
 version = "1.0.1"
 description = "Read key-value pairs from a .env file and set them as environment variables"
@@ -487,6 +575,31 @@ files = [
 [package.dependencies]
 attrs = ">=22.2.0"
 rpds-py = ">=0.7.0"
+
+[[package]]
+name = "rfc3339-validator"
+version = "0.1.4"
+description = "A pure python RFC3339 validator"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+files = [
+    {file = "rfc3339_validator-0.1.4-py2.py3-none-any.whl", hash = "sha256:24f6ec1eda14ef823da9e36ec7113124b39c04d50a4d3d3a3c2859577e7791fa"},
+    {file = "rfc3339_validator-0.1.4.tar.gz", hash = "sha256:138a2abdf93304ad60530167e51d2dfb9549521a836871b88d7f4695d0022f6b"},
+]
+
+[package.dependencies]
+six = "*"
+
+[[package]]
+name = "rfc3987"
+version = "1.3.8"
+description = "Parsing and validation of URIs (RFC 3986) and IRIs (RFC 3987)"
+optional = false
+python-versions = "*"
+files = [
+    {file = "rfc3987-1.3.8-py2.py3-none-any.whl", hash = "sha256:10702b1e51e5658843460b189b185c0366d2cf4cff716f13111b0ea9fd2dce53"},
+    {file = "rfc3987-1.3.8.tar.gz", hash = "sha256:d3c4d257a560d544e9826b38bc81db676890c79ab9d7ac92b39c7a253d5ca733"},
+]
 
 [[package]]
 name = "rpds-py"
@@ -623,6 +736,28 @@ files = [
 ]
 
 [[package]]
+name = "six"
+version = "1.16.0"
+description = "Python 2 and 3 compatibility utilities"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
+files = [
+    {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
+    {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
+]
+
+[[package]]
+name = "types-python-dateutil"
+version = "2.9.0.20240316"
+description = "Typing stubs for python-dateutil"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "types-python-dateutil-2.9.0.20240316.tar.gz", hash = "sha256:5d2f2e240b86905e40944dd787db6da9263f0deabef1076ddaed797351ec0202"},
+    {file = "types_python_dateutil-2.9.0.20240316-py3-none-any.whl", hash = "sha256:6b8cb66d960771ce5ff974e9dd45e38facb81718cc1e208b10b1baccbfdbee3b"},
+]
+
+[[package]]
 name = "typing-extensions"
 version = "4.12.2"
 description = "Backported and Experimental Type Hints for Python 3.8+"
@@ -633,7 +768,36 @@ files = [
     {file = "typing_extensions-4.12.2.tar.gz", hash = "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8"},
 ]
 
+[[package]]
+name = "uri-template"
+version = "1.3.0"
+description = "RFC 6570 URI Template Processor"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "uri-template-1.3.0.tar.gz", hash = "sha256:0e00f8eb65e18c7de20d595a14336e9f337ead580c70934141624b6d1ffdacc7"},
+    {file = "uri_template-1.3.0-py3-none-any.whl", hash = "sha256:a44a133ea12d44a0c0f06d7d42a52d71282e77e2f937d8abd5655b8d56fc1363"},
+]
+
+[package.extras]
+dev = ["flake8", "flake8-annotations", "flake8-bandit", "flake8-bugbear", "flake8-commas", "flake8-comprehensions", "flake8-continuation", "flake8-datetimez", "flake8-docstrings", "flake8-import-order", "flake8-literal", "flake8-modern-annotations", "flake8-noqa", "flake8-pyproject", "flake8-requirements", "flake8-typechecking-import", "flake8-use-fstring", "mypy", "pep8-naming", "types-PyYAML"]
+
+[[package]]
+name = "webcolors"
+version = "24.6.0"
+description = "A library for working with the color formats defined by HTML and CSS."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "webcolors-24.6.0-py3-none-any.whl", hash = "sha256:8cf5bc7e28defd1d48b9e83d5fc30741328305a8195c29a8e668fa45586568a1"},
+    {file = "webcolors-24.6.0.tar.gz", hash = "sha256:1d160d1de46b3e81e58d0a280d0c78b467dc80f47294b91b1ad8029d2cedb55b"},
+]
+
+[package.extras]
+docs = ["furo", "sphinx", "sphinx-copybutton", "sphinx-inline-tabs", "sphinx-notfound-page", "sphinxext-opengraph"]
+tests = ["coverage[toml]"]
+
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "b7685f49f5ffe7924cda70df03918213b405bcd7e8bf9bbb1ff51a56a94c41e0"
+content-hash = "bad5010dde2e1aaa66ce30b3690093f6e81ad1e9b10a60353b6f046023c6a0d3"
