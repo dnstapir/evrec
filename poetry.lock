@@ -800,4 +800,4 @@ tests = ["coverage[toml]"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "bad5010dde2e1aaa66ce30b3690093f6e81ad1e9b10a60353b6f046023c6a0d3"
+content-hash = "fa1bd1a7e444d7d62a7f405da9b5f6a3c32564be2857a4e1a49c0c8f8a4d0c74"
