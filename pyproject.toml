@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "evrec"
-version = "0.0.0"
+version = "0.1.0"
 description = "DNS TAPIR Event Receiver"
 authors = ["Jakob Schlyter <jakob@kirei.se>"]
 readme = "README.md"
