@@ -9,3 +9,4 @@ This repository contains the DNS TAPIR Event Receiver, a server component use fo
     MQTT_BROKER = "localhost"
     MQTT_TOPIC_READ = "events/up/#"
     MQTT_TOPIC_WRITE = "verified"
+    SCHEMA_VALIDATION = true

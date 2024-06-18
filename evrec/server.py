@@ -16,6 +16,7 @@ from paho.mqtt.properties import Properties
 
 from . import __verbose_version__
 from .settings import Settings
+from .validator import MessageValidator
 
 logger = logging.getLogger(__name__)
 
@@ -58,10 +59,12 @@ TEST_PAYLOAD = '{"payload":"eyJmbGFncyI6MzMxNTIsInFjbGFzcyI6MSwicW5hbWUiOiJpMi1v
 
 class EvrecServer:
     def __init__(self, settings: Settings):
+        self.logger = logging.getLogger(__name__).getChild(self.__class__.__name__)
         self.settings = settings
         if self.settings.mqtt_topic_write is None:
-            logger.warning("Not publishing verified messages")
+            self.logger.warning("Not publishing verified messages")
         self.clients_keys = self.get_clients_keys()
+        self.message_validator = MessageValidator()
 
     @staticmethod
     def create_settings(config_filename: Optional[str]):
@@ -83,7 +86,7 @@ class EvrecServer:
             with open(filename, "rb") as fp:
                 key = JWK.from_pem(fp.read())
                 key.kid = filename.name.removesuffix(".pem")
-                logger.debug("Adding key kid=%s (%s)", key.kid, key.thumbprint())
+                self.logger.debug("Adding key kid=%s (%s)", key.kid, key.thumbprint())
                 res.add(key)
         return res
 
@@ -95,21 +98,25 @@ class EvrecServer:
                     await client.subscribe(self.settings.mqtt_topic_read)
 
                     async for message in client.messages:
-                        logger.debug("Received message on %s", message.topic)
+                        self.logger.debug("Received message on %s", message.topic)
                         try:
                             jws = JWS()
                             jws.deserialize(message.payload)
                             key = verify_jws_with_keys(jws, self.clients_keys)
+                            if self.settings.schema_validation:
+                                self.message_validator.validate_message(
+                                    str(message.topic), jws.objects["payload"]
+                                )
                             if self.settings.mqtt_topic_write:
                                 await self.handle_payload(client, message, jws, key)
                             else:
-                                logger.debug("Not publishing verified message")
+                                self.logger.debug("Not publishing verified message")
                         except JWKeyNotFound:
-                            logger.warning(
+                            self.logger.warning(
                                 "Dropping unverified message on %s", message.topic
                             )
                         except Exception as exc:
-                            logger.error(
+                            self.logger.error(
                                 "Error parsing message on %s",
                                 message.topic,
                                 exc_info=exc,
@@ -138,7 +145,7 @@ class EvrecServer:
             retain=message.retain,
             properties=properties,
         )
-        logger.info("Published verified message from %s on %s", key.kid, new_topic)
+        self.logger.info("Published verified message from %s on %s", key.kid, new_topic)
 
 
 def verify_jws_with_keys(jws: JWS, keys: JWKSet) -> JWK:

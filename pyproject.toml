@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "evrec"
-version = "0.0.0"
+version = "0.1.0"
 description = "DNS TAPIR Event Receiver"
 authors = ["Jakob Schlyter <jakob@kirei.se>"]
 readme = "README.md"
@@ -14,6 +14,7 @@ pydantic-settings = "^2.3.3"
 aiomqtt = "^2.1.0"
 jwcrypto = "^1.5.6"
 jsonformatter = "^0.3.2"
+jsonschema = {extras = ["format"], version = ">=4.22.0"}
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.0"
