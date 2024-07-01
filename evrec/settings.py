@@ -17,18 +17,16 @@ MqttUrl = Annotated[
 ]
 
 
-class MQTT(BaseModel):
+class MqttSettings(BaseModel):
     broker: MqttUrl = Field(default="mqtt://localhost")
-    username: str | None = None
-    password: str | None = None
-    topic_read: str
+    topic_read: str = Field(default="events/up/#")
     topic_write: str | None = None
     reconnect_interval: int = Field(default=5)
 
 
 class Settings(BaseSettings):
-    mqtt: MQTT
-    clients_database: str
+    mqtt: MqttSettings = Field(default=MqttSettings())
+    clients_database: str = Field(default="clients")
     schema_validation: bool = False
 
     model_config = SettingsConfigDict(toml_file="evrec.toml")
