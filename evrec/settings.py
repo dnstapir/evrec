@@ -23,7 +23,7 @@ class MQTT(BaseModel):
     password: str | None = None
     topic_read: str
     topic_write: str | None = None
-    reconnect_interval: int = Field(default=5, min=0)
+    reconnect_interval: int = Field(default=5)
 
 
 class Settings(BaseSettings):
