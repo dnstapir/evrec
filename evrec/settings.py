@@ -1,6 +1,6 @@
 from typing import Annotated, Tuple, Type
 
-from pydantic import BaseModel, Field, UrlConstraints
+from pydantic import BaseModel, DirectoryPath, Field, UrlConstraints
 from pydantic_core import Url
 from pydantic_settings import (
     BaseSettings,
@@ -26,7 +26,7 @@ class MqttSettings(BaseModel):
 
 class Settings(BaseSettings):
     mqtt: MqttSettings = Field(default=MqttSettings())
-    clients_database: str = Field(default="clients")
+    clients_database: DirectoryPath = Field(default="clients")
     schema_validation: bool = False
 
     model_config = SettingsConfigDict(toml_file="evrec.toml")
