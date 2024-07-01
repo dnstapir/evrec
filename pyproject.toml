@@ -10,7 +10,7 @@ evrec_server = "evrec.server:main"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-pydantic-settings = "^2.3.3"
+pydantic-settings = "^2.3.4"
 aiomqtt = "^2.1.0"
 jwcrypto = "^1.5.6"
 jsonformatter = "^0.3.2"
