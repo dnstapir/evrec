@@ -17,7 +17,7 @@ push-container:
 	docker push $(CONTAINER)
 
 server: $(DEPENDS) clients clients/test.pem
-	poetry run evrec_server --config example.toml --debug
+	poetry run evrec_server --debug
 
 test-private.pem:
 	openssl ecparam -genkey -name prime256v1 -noout -out $@

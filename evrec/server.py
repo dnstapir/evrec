@@ -3,9 +3,7 @@ import asyncio
 import json
 import logging
 import logging.config
-import os
 from pathlib import Path
-from typing import Optional
 
 import aiomqtt
 from jwcrypto.common import JWKeyNotFound
@@ -61,24 +59,15 @@ class EvrecServer:
     def __init__(self, settings: Settings):
         self.logger = logging.getLogger(__name__).getChild(self.__class__.__name__)
         self.settings = settings
-        if self.settings.mqtt_topic_write is None:
+        if self.settings.mqtt.topic_write is None:
             self.logger.warning("Not publishing verified messages")
         self.clients_keys = self.get_clients_keys()
         self.message_validator = MessageValidator()
 
-    @staticmethod
-    def create_settings(config_filename: Optional[str]):
-        config_filename = config_filename or os.environ.get("EVREC_CONFIG")
-        if config_filename:
-            logger.info("Reading configuration from %s", config_filename)
-            return Settings.from_file(config_filename)
-        else:
-            return Settings()
-
     @classmethod
-    def factory(cls, config_filename: Optional[str]):
+    def factory(cls):
         logger.info("Starting Event Receiver version %s", __verbose_version__)
-        return cls(settings=cls.create_settings(config_filename))
+        return cls(settings=Settings())
 
     def get_clients_keys(self) -> JWKSet:
         res = JWKSet()
@@ -93,9 +82,14 @@ class EvrecServer:
     async def run(self):
         while True:
             try:
-                async with aiomqtt.Client(self.settings.mqtt_broker) as client:
-                    logging.info("MQTT connected to %s", self.settings.mqtt_broker)
-                    await client.subscribe(self.settings.mqtt_topic_read)
+                async with aiomqtt.Client(
+                    hostname=self.settings.mqtt.broker.host,
+                    port=self.settings.mqtt.broker.port,
+                    username=self.settings.mqtt.broker.username,
+                    password=self.settings.mqtt.broker.password,
+                ) as client:
+                    logging.info("MQTT connected to %s", self.settings.mqtt.broker)
+                    await client.subscribe(self.settings.mqtt.topic_read)
 
                     async for message in client.messages:
                         self.logger.debug("Received message on %s", message.topic)
@@ -107,7 +101,7 @@ class EvrecServer:
                                 self.message_validator.validate_message(
                                     str(message.topic), jws.objects["payload"]
                                 )
-                            if self.settings.mqtt_topic_write:
+                            if self.settings.mqtt.topic_write:
                                 await self.handle_payload(client, message, jws, key)
                             else:
                                 self.logger.debug("Not publishing verified message")
@@ -124,9 +118,9 @@ class EvrecServer:
             except aiomqtt.MqttError:
                 logging.error(
                     "MQTT connection lost; Reconnecting in %d seconds...",
-                    self.settings.mqtt_reconnect_interval,
+                    self.settings.mqtt.reconnect_interval,
                 )
-                await asyncio.sleep(self.settings.mqtt_reconnect_interval)
+                await asyncio.sleep(self.settings.mqtt.reconnect_interval)
 
     async def handle_payload(
         self,
@@ -135,7 +129,7 @@ class EvrecServer:
         jws: JWS,
         key: JWK,
     ) -> None:
-        new_topic = f"{self.settings.mqtt_topic_write}/{message.topic}"
+        new_topic = f"{self.settings.mqtt.topic_write}/{message.topic}"
         properties = Properties(PacketTypes.PUBLISH)
         properties.UserProperty = [("kid", key.kid), ("thumbprint", key.thumbprint())]
         await client.publish(
@@ -169,7 +163,6 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description="Event Receiver")
 
-    parser.add_argument("--config", metavar="filename", help="Configuration file")
     parser.add_argument("--debug", action="store_true", help="Enable debugging")
     parser.add_argument("--version", action="store_true", help="Show version")
 
@@ -186,7 +179,7 @@ def main() -> None:
     else:
         logging.basicConfig(level=logging.INFO)
 
-    app = EvrecServer.factory(args.config)
+    app = EvrecServer.factory()
 
     asyncio.run(app.run())
 
