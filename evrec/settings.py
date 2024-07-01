@@ -18,7 +18,7 @@ MqttUrl = Annotated[
 
 
 class MQTT(BaseModel):
-    broker: MqttUrl
+    broker: MqttUrl = Field(default="mqtt://localhost")
     username: str | None = None
     password: str | None = None
     topic_read: str

@@ -1,12 +1,9 @@
 from evrec.server import EvrecServer
-from evrec.settings import Settings
+from evrec.settings import MQTT, Settings
 
 
 def test_server():
     settings = Settings(
-        clients_database="clients",
-        mqtt_broker=None,
-        mqtt_topic_read="read",
-        mqtt_topic_write="write",
+        clients_database="clients", mqtt=MQTT(topic_read="read", topic_write="write")
     )
     _ = EvrecServer(settings)
