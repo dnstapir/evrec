@@ -11,7 +11,7 @@ evrec_server = "evrec.server:main"
 [tool.poetry.dependencies]
 python = "^3.11"
 pydantic-settings = "^2.3.3"
-aiomqtt = "^2.1.0"
+aiomqtt = "^2.2.0"
 jwcrypto = "^1.5.6"
 jsonformatter = "^0.3.2"
 jsonschema = {extras = ["format"], version = ">=4.22.0"}
@@ -19,7 +19,7 @@ jsonschema = {extras = ["format"], version = ">=4.22.0"}
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.0"
 ruff = "^0.5.0"
-pytest-ruff = "^0.3.1"
+pytest-ruff = "^0.4.1"
 
 [build-system]
 requires = ["poetry-core"]
