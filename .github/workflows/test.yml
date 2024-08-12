@@ -11,16 +11,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     needs: ruff
-    strategy:
-      matrix:
-        python-version:
-          - "3.12"
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: "3.12"
       - name: Get full python version
         id: full-python-version
         run: |
