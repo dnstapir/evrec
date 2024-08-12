@@ -1,15 +1,13 @@
 name: Build container
 
 on:
-  schedule:
-    - cron: "0 10 * * *"
   push:
     branches:
       - "main"
     tags:
       - "v*.*.*"
     workflows:
-      - test
+      - "Tests"
     types:
       - completed
 
