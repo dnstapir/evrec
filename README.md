@@ -5,8 +5,13 @@ This repository contains the DNS TAPIR Event Receiver, a server component use fo
 
 ## Configuration
 
-    CLIENTS_DATABASE = "clients"
-    MQTT_BROKER = "localhost"
-    MQTT_TOPIC_READ = "events/up/#"
-    MQTT_TOPIC_WRITE = "verified"
-    SCHEMA_VALIDATION = true
+The default configuration file is `evrec.toml`. Example configuration below:
+
+    clients_database = "clients"
+    schema_validation = true
+
+    [mqtt]
+    broker = "mqtt://localhost"
+    topic_read = "events/up/#"
+    topic_write = "verified"
+    reconnect_interval = 5
