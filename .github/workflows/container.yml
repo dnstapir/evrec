@@ -8,6 +8,10 @@ on:
       - "main"
     tags:
       - "v*.*.*"
+    workflows:
+      - test
+    types:
+      - completed
 
 env:
   REGISTRY: ghcr.io
@@ -17,6 +21,7 @@ jobs:
   container:
     name: Build and push container
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     permissions:
       actions: write
       contents: read
