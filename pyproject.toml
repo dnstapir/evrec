@@ -17,7 +17,7 @@ jsonformatter = "^0.3.2"
 jsonschema = {extras = ["format"], version = ">=4.22.0"}
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.2.0"
+pytest = "^8.3.3"
 ruff = "^0.6.3"
 pytest-ruff = "^0.4.1"
 
