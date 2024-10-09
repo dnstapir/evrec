@@ -25,8 +25,8 @@ pytest-ruff = "^0.4.1"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.isort]
-profile = "black"
+[tool.ruff]
+line-length = 120
 
 [tool.ruff.lint]
 select = [
