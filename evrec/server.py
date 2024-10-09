@@ -98,17 +98,13 @@ class EvrecServer:
                             jws.deserialize(message.payload)
                             key = verify_jws_with_keys(jws, self.clients_keys)
                             if self.settings.schema_validation:
-                                self.message_validator.validate_message(
-                                    str(message.topic), jws.objects["payload"]
-                                )
+                                self.message_validator.validate_message(str(message.topic), jws.objects["payload"])
                             if self.settings.mqtt.topic_write:
                                 await self.handle_payload(client, message, jws, key)
                             else:
                                 self.logger.debug("Not publishing verified message")
                         except JWKeyNotFound:
-                            self.logger.warning(
-                                "Dropping unverified message on %s", message.topic
-                            )
+                            self.logger.warning("Dropping unverified message on %s", message.topic)
                         except Exception as exc:
                             self.logger.error(
                                 "Error parsing message on %s",

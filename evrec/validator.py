@@ -20,9 +20,7 @@ class MessageValidator:
             with open(filename) as fp:
                 schema = json.load(fp)
             name = filename.name.removesuffix(".json")
-            self.schemas[name] = self.VALIDATOR(
-                schema, format_checker=self.VALIDATOR.FORMAT_CHECKER
-            )
+            self.schemas[name] = self.VALIDATOR(schema, format_checker=self.VALIDATOR.FORMAT_CHECKER)
             self.logger.debug("Loaded schema %s from %s", name, filename)
 
     def validate_message(self, topic: str, payload: bytes) -> None:
@@ -31,6 +29,4 @@ class MessageValidator:
         content_type = content["type"]
         if schema := self.schemas.get(content_type):
             schema.validate(content)
-            self.logger.debug(
-                "Message on %s validated against schema %s", topic, content_type
-            )
+            self.logger.debug("Message on %s validated against schema %s", topic, content_type)
