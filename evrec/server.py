@@ -3,7 +3,6 @@ import asyncio
 import json
 import logging
 import logging.config
-from pathlib import Path
 
 import aiomqtt
 from jwcrypto.common import JWKeyNotFound
@@ -12,47 +11,16 @@ from jwcrypto.jws import JWS, InvalidJWSSignature
 from paho.mqtt.packettypes import PacketTypes
 from paho.mqtt.properties import Properties
 
+from dnstapir.key_cache import key_cache_from_settings
+from dnstapir.key_resolver import key_resolver_from_client_database
+from dnstapir.logging import configure_json_logging
+
 from . import __verbose_version__
+from .keys import EvrecJWKSet
 from .settings import Settings
 from .validator import MessageValidator
 
 logger = logging.getLogger(__name__)
-
-LOGGING_RECORD_CUSTOM_FORMAT = {
-    "time": "asctime",
-    # "Created": "created",
-    # "RelativeCreated": "relativeCreated",
-    "name": "name",
-    # "Levelno": "levelno",
-    "levelname": "levelname",
-    "process": "process",
-    "thread": "thread",
-    # "threadName": "threadName",
-    # "Pathname": "pathname",
-    # "Filename": "filename",
-    # "Module": "module",
-    # "Lineno": "lineno",
-    # "FuncName": "funcName",
-    "message": "message",
-}
-
-LOGGING_CONFIG_JSON = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "json": {
-            "class": "evrec.logging.JsonFormatter",
-            "format": LOGGING_RECORD_CUSTOM_FORMAT,
-        },
-    },
-    "handlers": {
-        "json": {"class": "logging.StreamHandler", "formatter": "json"},
-    },
-    "root": {"handlers": ["json"], "level": "DEBUG"},
-}
-
-
-TEST_PAYLOAD = '{"payload":"eyJmbGFncyI6MzMxNTIsInFjbGFzcyI6MSwicW5hbWUiOiJpMi1vd3ppcmVzbXZqdmttcnd2YXhjYmNpZWlza2JzbmUuaW5pdC5jZWRleGlzLXJhZGFyLm5ldC4iLCJxdHlwZSI6MSwidGltZXN0YW1wIjoiMjAyNC0wNi0xMVQxNTo1NTowMCswMjowMCIsInR5cGUiOiJuZXdfcW5hbWUiLCJ2ZXJzaW9uIjowfQ","protected":"eyJhbGciOiJFUzI1NiJ9","signature":"JQy6bsdGA-7V1FGGzWDvsMpyeVgwR0U1ZqTGugTalOfrIVYk3UcmFhS6oY6pWsqkyAlKjQ2gNkC-hohAshl5Ow"}'
 
 
 class EvrecServer:
@@ -61,23 +29,17 @@ class EvrecServer:
         self.settings = settings
         if self.settings.mqtt.topic_write is None:
             self.logger.warning("Not publishing verified messages")
-        self.clients_keys = self.get_clients_keys()
+        key_cache = key_cache_from_settings(self.settings.key_cache) if self.settings.key_cache else None
+        key_resolver = key_resolver_from_client_database(
+            client_database=str(self.settings.clients_database), key_cache=key_cache
+        )
+        self.clients_keyset = EvrecJWKSet(key_resolver=key_resolver)
         self.message_validator = MessageValidator()
 
     @classmethod
     def factory(cls):
         logger.info("Starting Event Receiver version %s", __verbose_version__)
         return cls(settings=Settings())
-
-    def get_clients_keys(self) -> JWKSet:
-        res = JWKSet()
-        for filename in Path(self.settings.clients_database).glob("*.pem"):
-            with open(filename, "rb") as fp:
-                key = JWK.from_pem(fp.read())
-                key.kid = filename.name.removesuffix(".pem")
-                self.logger.debug("Adding key kid=%s (%s)", key.kid, key.thumbprint())
-                res.add(key)
-        return res
 
     async def run(self):
         while True:
@@ -96,7 +58,7 @@ class EvrecServer:
                         try:
                             jws = JWS()
                             jws.deserialize(message.payload)
-                            key = verify_jws_with_keys(jws, self.clients_keys)
+                            key = verify_jws_with_keys(jws, self.clients_keyset)
                             if self.settings.schema_validation:
                                 self.message_validator.validate_message(str(message.topic), jws.objects["payload"])
                             if self.settings.mqtt.topic_write:
@@ -143,14 +105,16 @@ def verify_jws_with_keys(jws: JWS, keys: JWKSet) -> JWK:
     protected_header = json.loads(jws.objects["protected"])
     if kid := protected_header.get("kid"):
         logger.debug("Signature by kid=%s", kid)
+        for key in keys.get_keys(kid):
+            try:
+                jws.verify(key=key)
+                if not hasattr(key, "kid"):
+                    key.kid = kid
+                return key
+            except InvalidJWSSignature:
+                pass
     else:
-        logger.debug("Signature by unknown key")
-    for key in keys.get_keys(kid) or keys:
-        try:
-            jws.verify(key=key)
-            return key
-        except InvalidJWSSignature:
-            pass
+        logger.debug("Signature without kid")
     raise JWKeyNotFound
 
 
@@ -168,7 +132,7 @@ def main() -> None:
         print(f"Event Receiver version {__verbose_version__}")
         return
 
-    logging.config.dictConfig(LOGGING_CONFIG_JSON)
+    configure_json_logging()
 
     if args.debug:
         logging.basicConfig(level=logging.DEBUG)
