@@ -9,8 +9,9 @@ readme = "README.md"
 evrec_server = "evrec.server:main"
 
 [tool.poetry.dependencies]
-python = "^3.11"
-pydantic-settings = "^2.6.0"
+python = "^3.12"
+dnstapir = {git = "https://github.com/dnstapir/python-dnstapir.git", rev = "v1.0.0"}
+pydantic-settings = "^2.5.2"
 aiomqtt = "^2.2.0"
 jwcrypto = "^1.5.6"
 jsonformatter = "^0.3.2"
@@ -49,6 +50,7 @@ ignore = ["E501", "I001"]
 force-sort-within-sections = false
 known-first-party = [
     "evrec",
+    "dnstapir"
 ]
 extra-standard-library = [
     "tomllib",
