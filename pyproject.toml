@@ -19,7 +19,7 @@ jsonschema = {extras = ["format"], version = ">=4.22.0"}
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.2.0"
-ruff = "^0.7.1"
+ruff = "^0.7.4"
 pytest-ruff = "^0.4.1"
 
 [build-system]
