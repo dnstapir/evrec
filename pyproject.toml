@@ -14,7 +14,7 @@ dnstapir = {git = "https://github.com/dnstapir/python-dnstapir.git", rev = "v1.0
 pydantic-settings = "^2.5.2"
 aiomqtt = "^2.2.0"
 jwcrypto = "^1.5.6"
-jsonformatter = "^0.3.2"
+jsonformatter = "^0.3.4"
 jsonschema = {extras = ["format"], version = ">=4.22.0"}
 
 [tool.poetry.group.dev.dependencies]
