@@ -10,7 +10,7 @@ evrec_server = "evrec.server:main"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-dnstapir = {git = "https://github.com/dnstapir/python-dnstapir.git", rev = "v1.0.0"}
+dnstapir = {git = "https://github.com/dnstapir/python-dnstapir.git", rev = "v1.2.1", extras = ["keymanager", "opentelemetry"]}
 pydantic-settings = "^2.7.0"
 aiomqtt = "^2.2.0"
 jwcrypto = "^1.5.6"
