@@ -11,4 +11,3 @@ RUN pip3 install *.whl && rm *.whl
 RUN useradd -u 1000 -m -s /sbin/nologin evrec
 USER evrec
 ENTRYPOINT ["evrec_server"]
-CMD ["--host", "0.0.0.0", "--port", "8080"]
