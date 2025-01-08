@@ -409,7 +409,7 @@ wmi = ["wmi (>=1.5.1)"]
 
 [[package]]
 name = "dnstapir"
-version = "1.2.1"
+version = "1.2.2"
 description = "DNS TAPIR Python Library"
 optional = false
 python-versions = "^3.11"
@@ -440,8 +440,8 @@ opentelemetry = ["botocore (>=1.35.82,<2.0.0)", "fastapi (>=0.115.2)", "opentele
 [package.source]
 type = "git"
 url = "https://github.com/dnstapir/python-dnstapir.git"
-reference = "v1.2.1"
-resolved_reference = "e8ca9739e31ab498c7aa7fbd7b4664b07a6f562c"
+reference = "v1.2.2"
+resolved_reference = "d104c5a3e2d5f0e89d1063b1652abd6acce5ade9"
 
 [[package]]
 name = "faas-cache-dict"
@@ -1864,4 +1864,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "eeb2e54312a7565d9321be1fbc8418b86b2f24d1dc1cd93a5e0ec95968026df1"
+content-hash = "cf4b2c0291193f3d6b6e4ca529ae88bce47720a57c8aa8cd99ff62ba6d2ac385"
