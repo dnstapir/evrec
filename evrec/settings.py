@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from pydantic import BaseModel, DirectoryPath, Field, UrlConstraints
+from pydantic import BaseModel, Field, UrlConstraints, DirectoryPath, AnyHttpUrl
 from pydantic_core import Url
 from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, SettingsConfigDict, TomlConfigSettingsSource
 
@@ -26,7 +26,7 @@ class RedisSettings(BaseModel):
 
 class Settings(BaseSettings):
     mqtt: MqttSettings = Field(default=MqttSettings())
-    clients_database: DirectoryPath = Field(default="clients")
+    clients_database: DirectoryPath | AnyHttpUrl = Field(default="clients")
     schema_validation: bool = False
     key_cache: KeyCacheSettings | None = None
 
