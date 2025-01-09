@@ -19,11 +19,6 @@ class MqttSettings(BaseModel):
     reconnect_interval: int = Field(default=5)
 
 
-class RedisSettings(BaseModel):
-    host: str = Field(description="Redis hostname")
-    port: int = Field(description="Redis port", default=6379)
-
-
 class Settings(BaseSettings):
     mqtt: MqttSettings = Field(default=MqttSettings())
     clients_database: str = Field(default="clients")
