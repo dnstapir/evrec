@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from pydantic import BaseModel, Field, UrlConstraints, DirectoryPath, AnyHttpUrl
+from pydantic import AnyHttpUrl, BaseModel, DirectoryPath, Field, UrlConstraints
 from pydantic_core import Url
 from pydantic_settings import BaseSettings, PydanticBaseSettingsSource, SettingsConfigDict, TomlConfigSettingsSource
 
@@ -17,11 +17,6 @@ class MqttSettings(BaseModel):
     topic_read: str = Field(default="events/up/#")
     topic_write: str | None = None
     reconnect_interval: int = Field(default=5)
-
-
-class RedisSettings(BaseModel):
-    host: str = Field(description="Redis hostname")
-    port: int = Field(description="Redis port", default=6379)
 
 
 class Settings(BaseSettings):
