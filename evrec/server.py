@@ -31,7 +31,7 @@ class EvrecServer:
             self.logger.warning("Not publishing verified messages")
         key_cache = key_cache_from_settings(self.settings.key_cache) if self.settings.key_cache else None
         key_resolver = key_resolver_from_client_database(
-            client_database=str(self.settings.clients_database), key_cache=key_cache
+            client_database=self.settings.clients_database, key_cache=key_cache
         )
         self.clients_keyset = EvrecJWKSet(key_resolver=key_resolver)
         self.message_validator = MessageValidator()
