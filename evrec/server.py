@@ -2,7 +2,6 @@ import argparse
 import asyncio
 import json
 import logging
-import logging.config
 
 import aiomqtt
 from jwcrypto.common import JWKeyNotFound
@@ -13,7 +12,7 @@ from paho.mqtt.properties import Properties
 
 from dnstapir.key_cache import key_cache_from_settings
 from dnstapir.key_resolver import key_resolver_from_client_database
-from dnstapir.logging import configure_json_logging
+from dnstapir.logging import setup_logging
 
 from . import __verbose_version__
 from .keys import EvrecJWKSet
@@ -123,6 +122,7 @@ def main() -> None:
 
     parser = argparse.ArgumentParser(description="Event Receiver")
 
+    parser.add_argument("--log-json", action="store_true", help="Enable JSON logging")
     parser.add_argument("--debug", action="store_true", help="Enable debugging")
     parser.add_argument("--version", action="store_true", help="Show version")
 
@@ -132,12 +132,7 @@ def main() -> None:
         print(f"Event Receiver version {__verbose_version__}")
         return
 
-    configure_json_logging()
-
-    if args.debug:
-        logging.basicConfig(level=logging.DEBUG)
-    else:
-        logging.basicConfig(level=logging.INFO)
+    setup_logging(json_logs=args.log_json, log_level="DEBUG" if args.debug else "INFO")
 
     app = EvrecServer.factory()
 
