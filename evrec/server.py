@@ -49,7 +49,7 @@ class EvrecServer:
                     username=self.settings.mqtt.broker.username,
                     password=self.settings.mqtt.broker.password,
                 ) as client:
-                    logging.info("MQTT connected to %s", self.settings.mqtt.broker)
+                    self.logger.info("MQTT connected to %s", self.settings.mqtt.broker)
                     await client.subscribe(self.settings.mqtt.topic_read)
 
                     async for message in client.messages:
