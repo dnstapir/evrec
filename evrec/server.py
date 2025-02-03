@@ -10,12 +10,12 @@ from jwcrypto.jws import JWS, InvalidJWSSignature
 from paho.mqtt.packettypes import PacketTypes
 from paho.mqtt.properties import Properties
 
+from dnstapir.jws import ResolverJWKSet
 from dnstapir.key_cache import key_cache_from_settings
 from dnstapir.key_resolver import key_resolver_from_client_database
 from dnstapir.logging import setup_logging
 
 from . import __verbose_version__
-from .keys import EvrecJWKSet
 from .settings import Settings
 from .validator import MessageValidator
 
@@ -32,7 +32,7 @@ class EvrecServer:
         key_resolver = key_resolver_from_client_database(
             client_database=self.settings.clients_database, key_cache=key_cache
         )
-        self.clients_keyset = EvrecJWKSet(key_resolver=key_resolver)
+        self.clients_keyset = ResolverJWKSet(key_resolver=key_resolver)
         self.message_validator = MessageValidator()
 
     @classmethod
@@ -57,7 +57,7 @@ class EvrecServer:
                         try:
                             jws = JWS()
                             jws.deserialize(message.payload)
-                            key = verify_jws_with_keys(jws, self.clients_keyset)
+                            key = self.clients_keyset.verify_jws(jws)
                             if self.settings.schema_validation:
                                 self.message_validator.validate_message(str(message.topic), jws.objects["payload"])
                             if self.settings.mqtt.topic_write:
