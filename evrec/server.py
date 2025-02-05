@@ -53,13 +53,14 @@ class EvrecServer:
                     await client.subscribe(self.settings.mqtt.topic_read)
 
                     async for message in client.messages:
-                        self.logger.debug("Received message on %s", message.topic)
+                        self.logger.debug("Received message on %s, %s", message.topic, message.payload.decode())
                         try:
                             jws = JWS()
                             jws.deserialize(message.payload)
                             key = self.clients_keyset.verify_jws(jws)
                             if self.settings.schema_validation:
                                 self.message_validator.validate_message(str(message.topic), jws.objects["payload"])
+                            self.logger.debug("Verified message: %s", jws.objects["payload"].decode())
                             if self.settings.mqtt.topic_write:
                                 await self.handle_payload(client, message, jws, key)
                             else:
