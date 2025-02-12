@@ -48,6 +48,7 @@ class EvrecServer:
                     port=self.settings.mqtt.broker.port,
                     username=self.settings.mqtt.broker.username,
                     password=self.settings.mqtt.broker.password,
+                    protocol=aiomqtt.ProtocolVersion.V5,
                 ) as client:
                     self.logger.info("MQTT connected to %s", self.settings.mqtt.broker)
                     await client.subscribe(self.settings.mqtt.topic_read)
