@@ -12,6 +12,6 @@ The default configuration file is `evrec.toml`. Example configuration below:
 
     [mqtt]
     broker = "mqtt://localhost"
-    topic_read = "events/up/#"
+    topic_read = "$share/evrec/events/up/#"
     topic_write = "verified"
     reconnect_interval = 5
